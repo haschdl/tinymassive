@@ -58,14 +58,11 @@ void draw() {
 
   surface.setTitle(String.format("Frames: %d FPS: %.0f n=%.0f", frameCount, frameRate, n));
 
-  float offset = millis()/duration * 200;
-
-
   if (frameCount >= duration)
     noLoop();
 
 
-  if (frameCount< 1 * fpsOut) { //few seconds: blank
+  if (frameCount< 5 * fpsOut) { //few seconds: blank
     fill(255, 255);
     rect(0, 0, width, height);
     save();
@@ -75,7 +72,7 @@ void draw() {
   angle+= QUARTER_PI/100;
 
 
-  int fadeOutStart = 55 * fpsOut;
+  int fadeOutStart = 57 * fpsOut;
   int fadeOutEnd = 60 * fpsOut;
   if (frameCount >= fadeOutStart) //fadeout 
   {
@@ -109,12 +106,12 @@ void draw() {
   buffer.endShape(CLOSE);
   buffer.endDraw();
   image(buffer, 0, 0, width, height);
-  println(volume);
   save();
+  
 }
 
 void save() {
-  //saveFrame("/frames/####.png");
+  saveFrame("frames/####.png");
 }
 
 void keyPressed() {
