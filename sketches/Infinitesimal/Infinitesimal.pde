@@ -63,7 +63,7 @@ void draw() {
   if (frameCount< 8 * fpsOut) { //few seconds: blank
     fill(255, 255);
     rect(0, 0, w, h);
-    saveFrame("/frames/####.png");
+    save();
     return;
   }
 
@@ -77,7 +77,7 @@ void draw() {
     resetMatrix();
     fill(255, map(frameCount, fadeOutStart, fadeOutEnd, 1, 255));
     rect(0, 0, w, h);
-    saveFrame("/frames/####.png");
+    save();  
     return;
   }
 
@@ -98,5 +98,15 @@ void draw() {
   //translate(noise(millis()/5000.)*10, noise(millis()/5000. + 33432)*10);
   //background(255, 20);
   image(buffer, 0, 0);
-  saveFrame("/frames/####.png");
+  save();
+}
+
+void save() {
+  //saveFrame("/frames/####.png");
+}
+
+void xxkeyPressed() {
+  loop();
+  frameCount =0;
+  clear();
 }
