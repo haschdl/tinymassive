@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;  
 
 
-float n = 1000;
+float n = 20;
 float s = 1;
 
 PGraphics buffer;
@@ -12,7 +12,7 @@ float w, h;
 
 //int[] palette = new int[]{ #88498F, #779FA1, #E0CBA8, #FF6542, #564154 };
 int[] palette = new int[]{ #7D21FF, #F28B0E, #5E9E0F, #FF0000, #FFFF14 };
-int devScale = 4;
+int devScale = 8;
 float finalW = 77;
 float finalH = 13;
 
@@ -32,9 +32,9 @@ void settings() {
 
 
 void setup() {
-  w = width;
-  h = height;
-  buffer = createGraphics(int(w), int(h));
+  w = finalW;
+  h = finalH;
+  buffer = createGraphics(int(finalW), int(finalH));
   buffer.beginDraw();
   buffer.noStroke();
   buffer.endDraw();
@@ -42,14 +42,16 @@ void setup() {
   noStroke();
   background(255);
   minim = new Minim(this);
-  //backgroundSound = minim.loadFile( "background.mp3", 2048);
-  //backgroundSound.play();
+  backgroundSound = minim.loadFile( "background.mp3", 2048);
 }
 
 float a = 100;
 float angle=0;
+boolean start = false;
 
 void draw() {
+  if (!start)
+    return;
 
   surface.setTitle(String.format("Frames: %d FPS: %.0f n=%.0f", frameCount, frameRate, n));
 
@@ -60,9 +62,9 @@ void draw() {
     noLoop();
 
 
-  if (frameCount< 8 * fpsOut) { //few seconds: blank
+  if (frameCount< 1 * fpsOut) { //few seconds: blank
     fill(255, 255);
-    rect(0, 0, w, h);
+    rect(0, 0, width, height);
     save();
     return;
   }
@@ -76,28 +78,35 @@ void draw() {
   {
     resetMatrix();
     fill(255, map(frameCount, fadeOutStart, fadeOutEnd, 1, 255));
-    rect(0, 0, w, h);
+    rect(0, 0, width, height);
     save();  
     return;
   }
 
   buffer.beginDraw();
+  buffer.noStroke();
   buffer.translate(w/2, h/2);
   buffer.rotate(angle);
   for (float i = 0; i < n; i++) {
-    color c = palette[int(i)%palette.length];
+    color c = palette[int(i+floor(frameCount/50.))%palette.length];
     float x = w/n  * i;
-    float y = tan(a*x + a * x*x)  * offset;
+    float y = sin(a*x)  ;
 
 
-    buffer.fill(c, 150);// + abs(y/h)*80);
-    s= 2 + 1*pow(abs(y/h), 1.2);
-    buffer.ellipse(x+ frameCount/1000, y, s, s);
+    buffer.fill(c, 255);// + abs(y/h)*80);
+    s= 2;// + 1*pow(abs(y/h), 1.2);
+    buffer.ellipse(x, y, s, s);
   }
   buffer.endDraw();
   //translate(noise(millis()/5000.)*10, noise(millis()/5000. + 33432)*10);
   //background(255, 20);
-  image(buffer, 0, 0);
+
+  if (frameCount < 21 * fpsOut) {
+
+    //translate(width/2, height/2);
+    //rotate(frameCount/25.);
+  }
+  image(buffer, 0, 0, width, height);
   save();
 }
 
@@ -105,8 +114,9 @@ void save() {
   //saveFrame("/frames/####.png");
 }
 
-void xxkeyPressed() {
-  loop();
-  frameCount =0;
-  clear();
+void keyPressed() {
+  if (key=='S' || key=='s') {
+    start = true;
+    backgroundSound.play();
+  }
 }
