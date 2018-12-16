@@ -50,6 +50,7 @@ void setup() {
 float a = 100;
 float angle=0;
 boolean start = false;
+float volume = 0;
 
 void draw() {
   if (!start)
@@ -88,19 +89,27 @@ void draw() {
   buffer.beginDraw();
   buffer.background(255);
   buffer.noStroke();
-  buffer.translate(w/2, 0);
   shapes.draw();
-  buffer.endDraw();
-  //translate(noise(millis()/5000.)*10, noise(millis()/5000. + 33432)*10);
-  //background(255, 20);
 
-  if (frameCount < 21 * fpsOut) {
 
-    //translate(width/2, height/2);
-    //rotate(frameCount/25.);
+
+  //drawing a line on bottom
+  buffer.fill(0, 0, 255);
+  buffer.resetMatrix();
+  //buffer.rect(0, 0, 20, 20);
+  buffer.beginShape();
+
+
+  for (float i=0; i<=finalW; i++) {
+    buffer.vertex(i, noise(millis()+ i*1122.)*2 + (h-volume));
   }
-  background(255);
+  buffer.vertex(w, h);//botom-right
+  buffer.vertex(0, h);//botom-left
+
+  buffer.endShape(CLOSE);
+  buffer.endDraw();
   image(buffer, 0, 0, width, height);
+  println(volume);
   save();
 }
 

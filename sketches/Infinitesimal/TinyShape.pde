@@ -10,6 +10,7 @@ class TinyShape {
   float h = 0;
   float scale = 1;
 
+
   TinyShape(PGraphics target, PShape innerShape, PVector size, PVector velocity) {
     this.s= innerShape;
     this.g = target;
@@ -24,8 +25,11 @@ class TinyShape {
     if (pos.x >= g.width)
       pos.x=0;
 
-    if (pos.y > g.height)
+    if (pos.y > g.height) {
       pos.y=0;
+      pos.x= int(random(g.width));
+      volume+=this.w/100;
+    }
 
     return this;
   }
