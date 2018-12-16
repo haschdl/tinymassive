@@ -6,6 +6,7 @@ float n = 20;
 float s = 1;
 
 PGraphics buffer;
+Shapes shapes;
 float w, h;
 
 
@@ -34,11 +35,12 @@ void settings() {
 void setup() {
   w = finalW;
   h = finalH;
+  frameRate(fpsOut);
   buffer = createGraphics(int(finalW), int(finalH));
   buffer.beginDraw();
   buffer.noStroke();
   buffer.endDraw();
-
+  shapes = new Shapes(buffer);
   noStroke();
   background(255);
   minim = new Minim(this);
@@ -84,19 +86,10 @@ void draw() {
   }
 
   buffer.beginDraw();
+  buffer.background(255);
   buffer.noStroke();
-  buffer.translate(w/2, h/2);
-  buffer.rotate(angle);
-  for (float i = 0; i < n; i++) {
-    color c = palette[int(i+floor(frameCount/50.))%palette.length];
-    float x = w/n  * i;
-    float y = sin(a*x)  ;
-
-
-    buffer.fill(c, 255);// + abs(y/h)*80);
-    s= 2;// + 1*pow(abs(y/h), 1.2);
-    buffer.ellipse(x, y, s, s);
-  }
+  buffer.translate(w/2, 0);
+  shapes.draw();
   buffer.endDraw();
   //translate(noise(millis()/5000.)*10, noise(millis()/5000. + 33432)*10);
   //background(255, 20);
@@ -106,6 +99,7 @@ void draw() {
     //translate(width/2, height/2);
     //rotate(frameCount/25.);
   }
+  background(255);
   image(buffer, 0, 0, width, height);
   save();
 }
