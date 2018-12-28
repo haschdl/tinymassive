@@ -11,7 +11,7 @@ Shapes shapes;
 float w, h;
 
 int[] palette = new int[]{ #7D21FF, #F28B0E, #5E9E0F, #FF0000, #FFFF14 };
-int devScale = 3;
+int devScale = 1;
 float finalW = 77;
 float finalH = 13;
 
