@@ -8,7 +8,7 @@ class TinyShape {
 
   float w = 0;
   float h = 0;
-  float scale = 1;
+
 
 
   TinyShape(PGraphics target, PShape innerShape, PVector size, PVector velocity) {
@@ -28,7 +28,7 @@ class TinyShape {
     if (pos.y > g.height) {
       pos.y=0;
       pos.x= int(random(g.width));
-      volume+=this.w/100;
+      
     }
 
     return this;
@@ -40,6 +40,6 @@ class TinyShape {
     s.setFill(strokeColor);
     g.noStroke();
 
-    g.shape(s, pos.x/scale, pos.y/scale);
+    g.shape(s, pos.x, pos.y);
   }
 }
