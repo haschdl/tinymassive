@@ -1,4 +1,4 @@
-import java.text.SimpleDateFormat;  
+import java.text.SimpleDateFormat;   //<>//
 import java.util.Date;  
 import ddf.minim.*;
 import ddf.minim.effects.*;
@@ -11,7 +11,7 @@ Shapes shapes;
 float w, h;
 
 int[] palette = new int[]{ #7D21FF, #F28B0E, #5E9E0F, #FF0000, #FFFF14 };
-int devScale = 1;
+int devScale = 10;
 float finalW = 77;
 float finalH = 13;
 
@@ -21,7 +21,7 @@ float duration = 70 * fpsOut; //duration of the animation in FRAMES: 30FPS x 60s
 
 Minim minim;
 AudioPlayer backgroundSound;
-
+int backgroundSoundLen;
 AudioSample drop1, drop2;
 
 ArrayList<Droplet> droplets = new ArrayList<Droplet>();
@@ -48,6 +48,8 @@ void setup() {
   background(0);
   minim = new Minim(this);
   backgroundSound = minim.loadFile( "background.mp3", 2048);
+  backgroundSoundLen = backgroundSound.length();
+
   drop1 = minim.loadSample( "drop1_16.wav");
   drop2 = minim.loadSample( "drop2_16.wav");
   texture = loadImage("texture_vol.png");
@@ -81,21 +83,15 @@ void draw() {
   buffer.background(0);
 
   //SCENE 1: Droplets (10 seconds)
-  if (frameCount< 15 * fpsOut) { 
-
+  if (frameCount< 10 * fpsOut) { 
     buffer.noStroke();
-
     for (Droplet d : droplets) {
       d.draw();
       d.update();
     }
     buffer.endDraw();
-    save();
     image(buffer, 0, 0, width, height);
   }
-
-  if (frameCount < 5 * fpsOut)
-    return;
 
   //SCENE 2: RAIN (60 seconds)
   if (!backgroundSound.isPlaying()) {
@@ -104,13 +100,8 @@ void draw() {
     backgroundSound.shiftGain(-80, 0., 10000);
   }
 
-
-
-
-
   buffer.noStroke();
   shapes.draw(constrain((float)1.2*frameCount/duration, 0., 1.));
-
 
   //FILLING UP (drawing a line on bottom)
 
@@ -135,26 +126,17 @@ void draw() {
   buffer.endDraw();
 
   //frames left until end
-  volume += .007 ;
-
-
+  float f = (float)backgroundSound.position()/backgroundSoundLen;
+  volume = f * h;
 
   image(buffer, 0, 0, width, height);
 
-  int fadeOutStart = 65 * fpsOut;
-  int fadeOutEnd = int(duration);
-  if (frameCount >= fadeOutStart) //fadeout 
+  if (f >= .9) //fadeout 
   {
     resetMatrix();
-    fill(0, map(frameCount, fadeOutStart, fadeOutEnd, 1, 255));
+    fill(0, map(f, .9, 1, 1, 255));
     rect(0, 0, width, height);
   }
-
-  save();
-}
-
-void save() {
-  saveFrame("frames/####.png");
 }
 
 void keyPressed() {
